@@ -44,14 +44,59 @@ router.post("/register", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
+      success: false,
       message: "Internal server error!",
       error: "Something went wrong while registering. Please try again later!",
     });
   }
 });
 
-router.post("/login", (req, res) => {
-  res.send("Login route");
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ message: "Please enter both email and password. Required!" });
+  }
+
+  try {
+    const user = await usersCollection.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "No account found with this email!" });
+    }
+
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) {
+      return res
+        .status(401)
+        .json({ message: "Incorrect password. Please try again!" });
+    }
+
+    const token = user._id.toString();
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        photoURL: user.photoURL,
+        createdAt: user.createdAt,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message:
+        "An unexpected error occurred during login. Please try again later!",
+    });
+  }
 });
 
 export default router;
