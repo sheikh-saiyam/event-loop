@@ -179,7 +179,7 @@ const Events = () => {
                 key={event?._id}
                 className="bg-white border rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
               >
-                <CardHeader className="pb-4">
+                <CardHeader className="flex flex-grow pb-4">
                   <div className="space-y-1">
                     {/* Title and Location */}
                     <div>

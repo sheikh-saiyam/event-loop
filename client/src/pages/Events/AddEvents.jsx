@@ -44,7 +44,7 @@ const AddEvents = () => {
 
     try {
       await axios.post("http://localhost:5000/events", eventData);
-      navigate("/events");
+      navigate("/my-events");
       toast.success("Event added successfully!");
       reset();
     } catch (err) {

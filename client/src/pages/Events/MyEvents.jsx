@@ -7,7 +7,7 @@ import { DeleteEventDialog } from "./components/DeleteEvent";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -122,39 +122,44 @@ export default function MyEventsPage() {
 
         {/* Events Grid */}
         {events?.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-              <Calendar className="w-12 h-12 text-gray-400" />
+          <div className="rounded-xl shadow border p-6 text-center py-12">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <Calendar className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-gray-900">
               No events found!
             </h3>
             <p className="text-gray-500">You haven't created any events yet.</p>
+            <Link to="/add-event">
+              <Button variant={"outline"} size={"sm"} className={"mt-3 mx-auto"}>
+                Create Event
+              </Button>
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => (
               <Card
                 key={event._id}
-                className="hover:shadow-lg transition-shadow duration-200"
+                className="hover:shadow-md transition-shadow duration-200"
               >
                 <CardHeader className="pb-3">
-                  <div className="flex justify-between items-start mb-2">
-                    <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg font-bold text-gray-800 line-clamp-2">
                       {event.title}
                     </CardTitle>
-                    <Badge variant="secondary" className="ml-2 shrink-0">
-                      <Users className="w-3 h-3 mr-1" />
-                      {event.attendeeCount}
-                    </Badge>
                   </div>
                   <p className="text-sm text-gray-600">
                     Posted by:{" "}
                     <span className="font-medium">{event.postedBy.name}</span>
                   </p>
+                  <p className="text-sm text-gray-600">
+                    Attendees Count:{" "}
+                    <span className="font-medium">{event.attendeeCount}</span>
+                  </p>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
+                <CardContent className="-mt-4 space-y-2">
                   {/* Date and Time */}
                   <div className="flex items-center text-sm text-gray-600">
                     <Calendar className="w-4 h-4 mr-2 text-blue-500" />
@@ -173,7 +178,7 @@ export default function MyEventsPage() {
                   </div>
 
                   {/* Description */}
-                  <div className="text-sm text-gray-700">
+                  <div className="mt-4 text-sm text-gray-700">
                     <p className="line-clamp-3">{event.description}</p>
                   </div>
 
@@ -182,7 +187,7 @@ export default function MyEventsPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="flex-1 bg-transparent"
+                      className="flex-1 cursor-pointer bg-transparent"
                       onClick={() => openUpdateModal(event)}
                     >
                       <Edit className="w-4 h-4 mr-2" />
@@ -191,7 +196,7 @@ export default function MyEventsPage() {
                     <Button
                       variant="destructive"
                       size="sm"
-                      className="flex-1"
+                      className="flex-1 cursor-pointer"
                       onClick={() => openDeleteDialog(event)}
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
