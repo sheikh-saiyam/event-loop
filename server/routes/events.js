@@ -200,4 +200,24 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.patch("/update/:id", async (req, res) => {
+  const eventId = req.params.id;
+  const updatedData = req.body;
+
+  try {
+    const result = await eventsCollection.updateOne(
+      { _id: new ObjectId(eventId) },
+      { $set: updatedData }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: "Event not found!" });
+    }
+
+    res.status(200).json({ message: "Event updated successfully!", result });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update event!" });
+  }
+});
+
 export default router;
