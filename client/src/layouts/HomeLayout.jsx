@@ -461,7 +461,7 @@ export default function HomePage() {
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
               Why Choose{" "}
               <span className="bg-gradient-to-r from-gray-600 to-slate-600 bg-clip-text text-transparent">
-                EventHub
+                Event Loop
               </span>
             </h2>
             <p className="text-xl text-gray-800 max-w-2xl mx-auto">
