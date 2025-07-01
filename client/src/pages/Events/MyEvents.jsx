@@ -49,7 +49,7 @@ export default function MyEventsPage() {
 
   if (isLoading || isError) {
     return (
-      <div className="flex justify-center items-center h-[400px]">
+      <div className="flex justify-center items-center min-h-screen">
         <Loader className="h-7 w-7 animate-spin text-black" />
       </div>
     );
