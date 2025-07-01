@@ -1,36 +1,83 @@
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { AlertCircle } from "lucide-react";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  // Handle login
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await axios.post("http://localhost:5000/auth/login", data);
+      const { token } = res.data;
+
+      // Save token in localStorage
+      localStorage.setItem("token", token);
+
+      // Show toast and redirect to "/"
+      navigate("/");
+      toast.success("Login successful!");
+    } catch (err) {
+      const message =
+        err.response?.data?.message || "Something went wrong during login!";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Card className={"max-w-sm w-full"}>
-        <CardHeader className={"gap-0.5"}>
-          <CardTitle className={"text-xl font-semibold"}>Login</CardTitle>
-          <CardDescription className={"font-medium"}>
+      <Card className="max-w-sm w-full">
+        <CardHeader className="gap-0.5">
+          <CardTitle className="text-xl font-semibold">Login</CardTitle>
+          <CardDescription className="font-medium">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
 
         <CardContent>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Email */}
             <div className="space-y-2">
               <Label>Email</Label>
-              <Input type="email" placeholder="Enter your email" />
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                {...register("email", { required: "Email is required" })}
+              />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
+
             {/* Password */}
             <div className="space-y-2 relative">
               <Label>Password</Label>
@@ -38,6 +85,7 @@ const Login = () => {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="pr-10"
+                {...register("password", { required: "Password is required" })}
               />
               <button
                 type="button"
@@ -46,12 +94,32 @@ const Login = () => {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="px-4 py-1.5 bg-red-100 flex items-center gap-1 rounded-lg">
+                <AlertCircle size={16} className="mt-[1px] text-red-600" />
+                <p className="text-sm text-red-600 text-left font-medium">
+                  {error}
+                </p>
+              </div>
+            )}
 
             {/* Submit */}
             <div>
-              <Button type="submit" className={"w-full"} size={"sm"}>
-                Login
+              <Button
+                size="sm"
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
               </Button>
             </div>
           </form>

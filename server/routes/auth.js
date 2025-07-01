@@ -99,13 +99,7 @@ router.post("/login", async (req, res) => {
       success: true,
       message: "Login successful!",
       token,
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        photoURL: user.photoURL,
-        createdAt: user.createdAt,
-      },
+      userId: user._id,
     });
   } catch (err) {
     console.log(err.message);
