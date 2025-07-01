@@ -15,8 +15,10 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
+  const { fetchUser } = useAuth();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +44,7 @@ const Login = () => {
       localStorage.setItem("token", token);
 
       // Show toast and redirect to "/"
+      fetchUser();
       toast.success("Login successful!");
       navigate("/");
     } catch (err) {
