@@ -164,4 +164,40 @@ router.patch("/join/:id", async (req, res) => {
   }
 });
 
+// My events
+router.get("/my", async (req, res) => {
+  const email = req.query.email;
+  if (!email)
+    return res.status(400).json({ message: "User Email is required!" });
+
+  try {
+    const events = await eventsCollection
+      .find({ "postedBy.email": email })
+      .sort({ date: -1 })
+      .toArray();
+
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch your events!" });
+  }
+});
+
+// Delete events
+router.delete("/:id", async (req, res) => {
+  const eventId = req.params.id;
+
+  try {
+    const result = await eventsCollection.deleteOne({
+      _id: new ObjectId(eventId),
+    });
+
+    if (result.deletedCount === 0)
+      return res.status(404).json({ message: "Event not found!" });
+
+    res.status(200).json({ message: "Event deleted successfully!" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete event!" });
+  }
+});
+
 export default router;

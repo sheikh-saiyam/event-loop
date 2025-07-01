@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useState } from "react";
+import axios from "axios";
 
 import {
   Select,
@@ -12,11 +12,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Search,
+  Users,
+  X,
+  AlertCircle,
+} from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, Search, Users, X } from "lucide-react";
-import { toast } from "sonner";
-import { Loader } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Loader } from "lucide-react";
+import { toast } from "sonner";
 
 const Events = () => {
   const { user } = useAuth();
@@ -25,7 +33,7 @@ const Events = () => {
   const [filter, setFilter] = useState("");
 
   const fetchEvents = async () => {
-    const res = await axios?.get("http://localhost:5000/events", {
+    const res = await axios("http://localhost:5000/events", {
       params: { search, filter, email: user?.email },
     });
     return res?.data;
@@ -155,9 +163,12 @@ const Events = () => {
             <p className="text-gray-500 text-sm">Please try again later!</p>
           </div>
         ) : events?.length === 0 ? (
-          <Card className="text-center">
-            <p className="text-gray-800 text-xl">No events found!</p>
-            <p className="text-gray-700 text-base -mt-6">
+          <Card className="text-center py-24">
+            <AlertCircle size={25} className="mx-auto mt-2 text-gray-700" />
+            <p className="text-gray-700 text-xl font-semibold">
+              No events found!
+            </p>
+            <p className="text-gray-600 text-base font-medium -mt-5">
               Try adjusting your search or filters
             </p>
           </Card>
