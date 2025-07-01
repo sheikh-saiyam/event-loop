@@ -1,11 +1,13 @@
 import express from "express";
 import eventsCollection from "./../config/collections/eventsCollection.js";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
 // Get events
 router.get("/", async (req, res) => {
   const { search = "", filter = "" } = req.query;
+  const userEmail = req.query.email;
 
   const query = {};
 
@@ -55,7 +57,12 @@ router.get("/", async (req, res) => {
       .sort({ date: -1, time: -1 })
       .toArray();
 
-    res.status(200).json(events);
+    const updatedEvents = events.map((event) => ({
+      ...event,
+      alreadyJoined: userEmail ? event.attendees?.includes(userEmail) : false,
+    }));
+
+    res.status(200).json(updatedEvents);
   } catch (err) {
     res
       .status(500)
@@ -112,6 +119,48 @@ router.post("/", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: "Failed to add event. Please try again!" });
+  }
+});
+
+// Join event
+router.patch("/join/:id", async (req, res) => {
+  const eventId = req.params.id;
+  const userEmail = req.body.email;
+
+  if (!ObjectId.isValid(eventId)) {
+    return res.status(400).json({ message: "Invalid event ID" });
+  }
+
+  try {
+    // Check if user already joined
+    const event = await eventsCollection.findOne({
+      _id: new ObjectId(eventId),
+      attendees: userEmail,
+    });
+
+    if (event) {
+      return res
+        .status(400)
+        .json({ message: "You’ve already joined this event!" });
+    }
+
+    // Add email to attendees and increment attendeeCount atomically
+    const updateResult = await eventsCollection.updateOne(
+      { _id: new ObjectId(eventId) },
+      {
+        $push: { attendees: userEmail },
+        $inc: { attendeeCount: 1 },
+      }
+    );
+
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    res.status(200).json({ message: "Joined successfully" });
+  } catch (error) {
+    console.error("Join error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
