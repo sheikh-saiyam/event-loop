@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import axios from "axios";
 
 const AddEvents = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -42,6 +44,7 @@ const AddEvents = () => {
 
     try {
       await axios.post("http://localhost:5000/events", eventData);
+      navigate("/events");
       toast.success("Event added successfully!");
       reset();
     } catch (err) {
@@ -52,7 +55,7 @@ const AddEvents = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen py-12">
+    <div className="px-6 flex items-center justify-center min-h-screen py-12">
       <Card className="w-full max-w-xl p-0 pb-6">
         <CardHeader className={"gap-0.5 border-b pt-5"}>
           <CardTitle className="text-xl font-semibold">Add New Event</CardTitle>
@@ -132,7 +135,11 @@ const AddEvents = () => {
             </div>
 
             <div>
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={loading}
+              >
                 {loading ? "Submitting..." : "Add Event"}
               </Button>
             </div>
