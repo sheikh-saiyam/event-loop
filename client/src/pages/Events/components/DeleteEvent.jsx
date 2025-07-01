@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
 
 export function DeleteEventDialog({ event, isOpen, onClose, onConfirm }) {
@@ -37,7 +37,7 @@ export function DeleteEventDialog({ event, isOpen, onClose, onConfirm }) {
             </span>
             ?
           </p>
-          {event?.attendeeCount && event.attendeeCount > 0 && (
+          {event?.attendeeCount && event.attendeeCount > 0 ? (
             <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
               <p className="text-sm text-amber-800">
                 <strong>Warning:</strong> This event has {event.attendeeCount}{" "}
@@ -46,14 +46,19 @@ export function DeleteEventDialog({ event, isOpen, onClose, onConfirm }) {
                 all attendee registrations.
               </p>
             </div>
-          )}
+          ) : null}
         </div>
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="button" variant="destructive" onClick={onConfirm}>
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={onConfirm}
+            className={"cursor-pointer"}
+          >
             Delete Event
           </Button>
         </DialogFooter>

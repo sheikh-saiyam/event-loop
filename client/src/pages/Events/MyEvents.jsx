@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { Calendar, Clock, MapPin, Users, Edit, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,16 +74,24 @@ export default function MyEventsPage() {
     });
   };
 
-  const handleDeleteEvent = () => {
+  const handleDeleteEvent = async () => {
     if (!eventToDelete) return;
 
-    const updatedEvents = events?.filter(
-      (event) => event?._id !== eventToDelete?._id
-    );
-    setEvents(updatedEvents);
-    setIsDeleteDialogOpen(false);
-    setEventToDelete(null);
-    toast?.success("Event deleted successfully!");
+    try {
+      await axios.delete(`http://localhost:5000/events/${eventToDelete._id}`);
+
+      const updatedEvents = events.filter(
+        (event) => event._id !== eventToDelete._id
+      );
+      setEvents(updatedEvents);
+
+      toast.success("Event deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete event!");
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setEventToDelete(null);
+    }
   };
 
   const openUpdateModal = (event) => {
