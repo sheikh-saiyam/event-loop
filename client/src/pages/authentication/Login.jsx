@@ -2,19 +2,19 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
-import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -42,8 +42,8 @@ const Login = () => {
       localStorage.setItem("token", token);
 
       // Show toast and redirect to "/"
-      navigate("/");
       toast.success("Login successful!");
+      navigate("/");
     } catch (err) {
       const message =
         err.response?.data?.message || "Something went wrong during login!";
@@ -124,6 +124,18 @@ const Login = () => {
             </div>
           </form>
         </CardContent>
+
+        <div>
+          <p className="text-sm text-gray-800 text-center flex justify-center gap-1">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="hover:text-gray-900 font-medium duration-300 underline"
+            >
+              Sign Up
+            </Link>
+          </p>
+        </div>
       </Card>
     </div>
   );
