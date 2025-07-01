@@ -27,7 +27,6 @@ const AddEvents = () => {
     reset,
     formState: { errors },
   } = useForm();
-
   const onSubmit = async (data) => {
     setLoading(true);
 
@@ -36,8 +35,8 @@ const AddEvents = () => {
       attendeeCount: 0,
       attendees: [],
       postedBy: {
-        name: user?.displayName,
-        email: user?.email,
+        name: user.name || "Anonymous",
+        email: user.email || "no-email@example.com",
       },
     };
 
@@ -46,7 +45,7 @@ const AddEvents = () => {
       toast.success("Event added successfully!");
       reset();
     } catch (err) {
-      toast.error("Failed to add event. Try again!");
+      toast.error("Failed to add event. Please try again!");
     } finally {
       setLoading(false);
     }
@@ -75,28 +74,30 @@ const AddEvents = () => {
               )}
             </div>
 
-            {/* Date */}
-            <div className="space-y-2">
-              <Label>Date</Label>
-              <Input
-                type="date"
-                {...register("date", { required: "Date is required" })}
-              />
-              {errors.date && (
-                <p className="text-sm text-red-500">{errors.date.message}</p>
-              )}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Date */}
+              <div className="space-y-2">
+                <Label>Date</Label>
+                <Input
+                  type="date"
+                  {...register("date", { required: "Date is required" })}
+                />
+                {errors.date && (
+                  <p className="text-sm text-red-500">{errors.date.message}</p>
+                )}
+              </div>
 
-            {/* Time */}
-            <div className="space-y-2">
-              <Label>Time</Label>
-              <Input
-                type="time"
-                {...register("time", { required: "Time is required" })}
-              />
-              {errors.time && (
-                <p className="text-sm text-red-500">{errors.time.message}</p>
-              )}
+              {/* Time */}
+              <div className="space-y-2">
+                <Label>Time</Label>
+                <Input
+                  type="time"
+                  {...register("time", { required: "Time is required" })}
+                />
+                {errors.time && (
+                  <p className="text-sm text-red-500">{errors.time.message}</p>
+                )}
+              </div>
             </div>
 
             {/* Location */}
