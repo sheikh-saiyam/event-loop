@@ -11,7 +11,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:4173"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "https://event-loop-by-me.netlify.app",
+  ],
   credentials: true,
   optionalSuccessStatus: 200,
 };
