@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -43,7 +42,7 @@ const Login = () => {
       // Save token in localStorage
       localStorage.setItem("token", token);
 
-      // Show toast and redirect to "/"
+      // Get user Show toast and redirect to "/"
       fetchUser();
       toast.success("Login successful!");
       navigate("/");

@@ -39,8 +39,8 @@ const Navbar = () => {
   const handleLogout = () => logOut();
 
   return (
-    <div className="border-b border-gray-200 bg-gray-50">
-      <nav className="w-11/12 mx-auto max-w-[1400px] dark:border-gray-700">
+    <div className="sticky top-0 z-50 bg-gray-100 border-b border-gray-200 shadow-sm">
+      <nav className="w-11/12 mx-auto max-w-[1400px]">
         <div className="flex h-[72px] items-center justify-between">
           <Link
             to="/"
@@ -58,13 +58,13 @@ const Navbar = () => {
                   to={route?.href}
                   className={`relative px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition ${
                     route?.active
-                      ? "text-primary-600 dark:text-primary-400 font-semibold"
-                      : ""
+                      ? "text-gray-800 hover:text-gray-800 font-semibold"
+                      : "hover:text-gray-800"
                   }`}
                 >
                   {route?.label}
                   {route?.active && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary-600 dark:bg-primary-400 rounded-full"></span>
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-600 dark:bg-gray-400 rounded-full"></span>
                   )}
                 </Link>
               ))}
@@ -85,7 +85,7 @@ const Navbar = () => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="relative h-9 w-9 rounded-full p-0"
+                      className="relative h-9 w-9 rounded-full p-0 cursor-pointer"
                     >
                       <Avatar className="h-9 w-9">
                         <AvatarImage
@@ -116,7 +116,7 @@ const Navbar = () => {
                       className="cursor-pointer text-destructive focus:text-destructive font-medium px-4"
                       onClick={handleLogout}
                     >
-                      <LogOut className="text-destructive mt-[3px] h-4 w-4" />{" "}
+                      <LogOut className="text-destructive -mt-[1px] h-4 w-4" />{" "}
                       Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>

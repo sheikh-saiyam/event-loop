@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -11,12 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 
 const Register = () => {
+  const { fetchUser } = useAuth();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +34,6 @@ const Register = () => {
     setLoading(true);
     setError("");
 
-    // Provide default photo URL if not supplied or empty
     if (!data.photoURL || data.photoURL.trim() === "") {
       data.photoURL = "https://i.ibb.co/4RS0VXvL/default-user-image.png";
     }
@@ -44,6 +44,7 @@ const Register = () => {
 
       localStorage.setItem("token", token);
 
+      fetchUser();
       toast.success("Registration successful!");
       navigate("/");
     } catch (err) {
@@ -101,7 +102,18 @@ const Register = () => {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="pr-10"
-                {...register("password", { required: "Password is required" })}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters",
+                  },
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+                    message:
+                      "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+                  },
+                })}
               />
               <button
                 type="button"
