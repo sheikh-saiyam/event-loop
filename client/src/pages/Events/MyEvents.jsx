@@ -15,9 +15,10 @@ import axios from "axios";
 
 export default function MyEventsPage() {
   const { user } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchMyEvents = async () => {
-    const res = await axios("http://localhost:5000/events/my", {
+    const res = await axios(`${API_URL}/events/my`, {
       params: { email: user?.email },
     });
     return res?.data;
@@ -78,7 +79,7 @@ export default function MyEventsPage() {
     if (!eventToDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/events/${eventToDelete._id}`);
+      await axios.delete(`${API_URL}/events/${eventToDelete._id}`);
 
       const updatedEvents = events.filter(
         (event) => event._id !== eventToDelete._id
@@ -131,7 +132,11 @@ export default function MyEventsPage() {
             </h3>
             <p className="text-gray-500">You haven't created any events yet.</p>
             <Link to="/add-event">
-              <Button variant={"outline"} size={"sm"} className={"mt-3 mx-auto"}>
+              <Button
+                variant={"outline"}
+                size={"sm"}
+                className={"mt-3 mx-auto"}
+              >
                 Create Event
               </Button>
             </Link>

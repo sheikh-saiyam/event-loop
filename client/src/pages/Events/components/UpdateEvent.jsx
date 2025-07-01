@@ -16,6 +16,8 @@ import axios from "axios";
 import { toast } from "sonner";
 
 export function UpdateEventModal({ event, isOpen, onClose, refetch }) {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -48,7 +50,7 @@ export function UpdateEventModal({ event, isOpen, onClose, refetch }) {
 
     try {
       const res = await axios.patch(
-        `http://localhost:5000/events/update/${event._id}`,
+        `${API_URL}/events/update/${event._id}`,
         formData
       );
 

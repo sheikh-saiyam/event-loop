@@ -19,6 +19,7 @@ import axios from "axios";
 const Register = () => {
   const { fetchUser } = useAuth();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", data);
+      const res = await axios.post(`${API_URL}/auth/register`, data);
       const { token } = res.data;
 
       localStorage.setItem("token", token);

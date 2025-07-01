@@ -22,6 +22,7 @@ const AddEvents = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const {
     register,
@@ -43,7 +44,7 @@ const AddEvents = () => {
     };
 
     try {
-      await axios.post("http://localhost:5000/events", eventData);
+      await axios.post(`${API_URL}/events `, eventData);
       navigate("/my-events");
       toast.success("Event added successfully!");
       reset();

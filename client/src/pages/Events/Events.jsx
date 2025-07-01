@@ -31,9 +31,10 @@ const Events = () => {
   const [joining, setJoining] = useState(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchEvents = async () => {
-    const res = await axios("http://localhost:5000/events", {
+    const res = await axios(`${API_URL}/events`, {
       params: { search, filter, email: user?.email },
     });
     return res?.data;
@@ -53,7 +54,7 @@ const Events = () => {
   const handleJoin = async (eventId) => {
     setJoining(eventId);
     try {
-      await axios?.patch(`http://localhost:5000/events/join/${eventId}`, {
+      await axios?.patch(`${API_URL}/events/join/${eventId}`, {
         email: user?.email,
       });
       toast?.success("You’ve joined the event!");
