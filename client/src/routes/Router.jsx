@@ -6,6 +6,7 @@ import AddEvents from "@/pages/Events/AddEvents";
 import { Route, Routes } from "react-router-dom";
 import MyEvents from "@/pages/Events/MyEvents";
 import Events from "@/pages/Events/Events";
+import PrivateRoute from "./PrivateRoute";
 
 const Router = () => {
   return (
@@ -14,9 +15,30 @@ const Router = () => {
         <Route index element={<HomeLayout />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/add-event" element={<AddEvents />} />
-        <Route path="/my-events" element={<MyEvents />} />
+        <Route
+          path="/events"
+          element={
+            <PrivateRoute>
+              <Events />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-event"
+          element={
+            <PrivateRoute>
+              <AddEvents />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/my-events"
+          element={
+            <PrivateRoute>
+              <MyEvents />
+            </PrivateRoute>
+          }
+        />
       </Route>
     </Routes>
   );

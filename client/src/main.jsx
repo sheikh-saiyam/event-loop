@@ -8,7 +8,7 @@ import "./index.css";
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
   <AuthProvider>
-    <Toaster position="top-right" />
+    <Toaster position="bottom-right" />
     <BrowserRouter>
       <Router />
     </BrowserRouter>
