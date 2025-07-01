@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Calendar, Clock, MapPin, Users, Edit, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UpdateEventModal } from "./components/UpdateEvent";
+import { DeleteEventDialog } from "./components/DeleteEvent";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import { UpdateEventModal } from "./components/UpdateEvent";
-import { DeleteEventDialog } from "./components/DeleteEvent";
 
 export default function MyEventsPage() {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ export default function MyEventsPage() {
     const res = await axios("http://localhost:5000/events/my", {
       params: { email: user?.email },
     });
-    return res.data;
+    return res?.data;
   };
 
   const {
@@ -54,7 +55,7 @@ export default function MyEventsPage() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
+    return date?.toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -64,36 +65,24 @@ export default function MyEventsPage() {
   const formatTime = (timeString) => {
     const [hours, minutes] = timeString.split(":");
     const date = new Date();
-    date.setHours(Number.parseInt(hours), Number.parseInt(minutes));
-    return date.toLocaleTimeString("en-US", {
+    date?.setHours(Number.parseInt(hours), Number.parseInt(minutes));
+    return date?.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
     });
   };
 
-  const handleUpdateEvent = (eventData) => {
-    if (!selectedEvent) return;
-
-    const updatedEvents = events.map((event) =>
-      event._id === selectedEvent._id ? { ...event, ...eventData } : event
-    );
-    setEvents(updatedEvents);
-    setIsUpdateModalOpen(false);
-    setSelectedEvent(null);
-    toast.success("Event updated successfully!");
-  };
-
   const handleDeleteEvent = () => {
     if (!eventToDelete) return;
 
-    const updatedEvents = events.filter(
-      (event) => event._id !== eventToDelete._id
+    const updatedEvents = events?.filter(
+      (event) => event?._id !== eventToDelete?._id
     );
     setEvents(updatedEvents);
     setIsDeleteDialogOpen(false);
     setEventToDelete(null);
-    toast.success("Event deleted successfully!");
+    toast?.success("Event deleted successfully!");
   };
 
   const openUpdateModal = (event) => {
@@ -109,20 +98,27 @@ export default function MyEventsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Events</h1>
-          <p className="text-gray-600">Manage and track your created events</p>
+        {/* Section Header */}
+        <div className="mb-4">
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+              My Events
+            </h1>
+            <div className="mt-2 flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent"></div>
+          </div>
+          <p className="text-gray-700 text-base">
+            Manage and track your created events
+          </p>
         </div>
 
         {/* Events Grid */}
-        {events.length === 0 ? (
+        {events?.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-24 h-24 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
               <Calendar className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No events found
+              No events found!
             </h3>
             <p className="text-gray-500">You haven't created any events yet.</p>
           </div>
@@ -207,7 +203,7 @@ export default function MyEventsPage() {
             setIsUpdateModalOpen(false);
             setSelectedEvent(null);
           }}
-          onUpdate={handleUpdateEvent}
+          refetch={refetch}
         />
 
         {/* Delete Dialog */}
